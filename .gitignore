@@ -1,2 +1,10 @@
 server/node_modules
 server/build
+
+server/.DS_Store
+
+server/.env
+
+server/npm-debug.log*
+server/yarn-debug.log*
+server/yarn-error.log*

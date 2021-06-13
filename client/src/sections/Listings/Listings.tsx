@@ -1,5 +1,5 @@
 import React from "react";
-import { server } from "../../lib/api";
+import { useQuery, useMutation } from "../../lib/api";
 import {
     ListingData,
     DeleteListingData,
@@ -35,29 +35,59 @@ interface Props {
 }
 
 export const Listings = ({ title }: Props) => {
-    const fetchListings = async () => {
-        const { data } = await server.fetch<ListingData>({ query: LISTINGS });
-        console.log(data);
+    const { data, refetch, loading, error } = useQuery<ListingData>(LISTINGS);
+
+    const [
+        deleteListing,
+        { loading: deleteListingLoading, error: deleteListingError },
+    ] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTING);
+
+    const handleDeleteListings = async (id: string) => {
+        await deleteListing({ id });
+        refetch();
     };
 
-    const deleteListings = async () => {
-        const { data } = await server.fetch<
-            DeleteListingData,
-            DeleteListingVariables
-        >({
-            query: DELETE_LISTING,
-            variables: {
-                id: "60c46eea01af8e19d445be7f",
-            },
-        });
-        console.log(data);
-    };
+    const listings = data ? data.listings : null;
+
+    const listingsList = listings ? (
+        <ul>
+            {listings.map((listing) => {
+                return (
+                    <li key={listing.id}>
+                        {listing.title}
+                        <button
+                            onClick={() => handleDeleteListings(listing.id)}
+                        >
+                            Delete
+                        </button>
+                    </li>
+                );
+            })}
+        </ul>
+    ) : null;
+
+    if (loading) {
+        return <h2>Loading...</h2>;
+    }
+
+    if (error) {
+        return <h2>Something went wrong</h2>;
+    }
+
+    const deleteListingLoadingMessage = deleteListingLoading ? (
+        <h4>Delete in progress..</h4>
+    ) : null;
+
+    const deleteListingErrorMessage = deleteListingError ? (
+        <h4>Error on delete</h4>
+    ) : null;
 
     return (
         <div>
             <h2>{title}</h2>
-            <button onClick={fetchListings}>Query Listings</button>
-            <button onClick={deleteListings}>Delete Listings</button>
+            {listingsList}
+            {deleteListingLoadingMessage}
+            {deleteListingErrorMessage}
         </div>
     );
 };

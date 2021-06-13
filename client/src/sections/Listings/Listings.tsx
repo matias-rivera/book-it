@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-//import { useQuery, useMutation } from "../../lib/api";
 import { gql } from "apollo-boost";
 import { Listings as ListingData } from "./__generated__/Listings";
 import {
@@ -8,11 +7,10 @@ import {
     DeleteListingVariables,
 } from "./__generated__/DeleteListing";
 
-/* import {
-    ListingData,
-    DeleteListingData,
-    DeleteListingVariables,
-} from "./types"; */
+import { Alert, Avatar, Button, List, Spin } from "antd";
+
+import "./styles/Listings.css";
+import { ListingSkeleton } from "./components";
 
 const LISTINGS = gql`
     query Listings {
@@ -58,44 +56,66 @@ export const Listings = ({ title }: Props) => {
     const listings = data ? data.listings : null;
 
     const listingsList = listings ? (
-        <ul>
-            {listings.map((listing) => {
-                return (
-                    <li key={listing.id}>
-                        {listing.title}
-                        <button
+        <List
+            itemLayout="horizontal"
+            dataSource={listings}
+            renderItem={(listing) => (
+                <List.Item
+                    actions={[
+                        <Button
+                            type="primary"
                             onClick={() => handleDeleteListings(listing.id)}
                         >
                             Delete
-                        </button>
-                    </li>
-                );
-            })}
-        </ul>
+                        </Button>,
+                    ]}
+                >
+                    <List.Item.Meta
+                        title={listing.title}
+                        description={listing.address}
+                        avatar={
+                            <Avatar
+                                src={listing.image}
+                                shape="square"
+                                size={48}
+                            />
+                        }
+                    />
+                </List.Item>
+            )}
+        />
     ) : null;
 
     if (loading) {
-        return <h2>Loading...</h2>;
+        return (
+            <div className="listings">
+                <ListingSkeleton title={title} />
+            </div>
+        );
     }
 
     if (error) {
-        return <h2>Something went wrong</h2>;
+        return (
+            <div className="listings">
+                <ListingSkeleton title={title} error />
+            </div>
+        );
     }
-
-    const deleteListingLoadingMessage = deleteListingLoading ? (
-        <h4>Delete in progress..</h4>
-    ) : null;
-
-    const deleteListingErrorMessage = deleteListingError ? (
-        <h4>Error on delete</h4>
+    const deleteListingErrorAlert = deleteListingError ? (
+        <Alert
+            type="error"
+            message="Something went wrong"
+            className="listings__alert"
+        />
     ) : null;
 
     return (
-        <div>
-            <h2>{title}</h2>
-            {listingsList}
-            {deleteListingLoadingMessage}
-            {deleteListingErrorMessage}
+        <div className="listings">
+            <Spin spinning={deleteListingLoading}>
+                {deleteListingErrorAlert}
+                <h2>{title}</h2>
+                {listingsList}
+            </Spin>
         </div>
     );
 };

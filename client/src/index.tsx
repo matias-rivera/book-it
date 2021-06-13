@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-//import ApolloClient from "apollo-boost";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import reportWebVitals from "./reportWebVitals";
+import "./styles/index.css";
 
 import { Listings } from "./sections";
 

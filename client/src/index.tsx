@@ -1,13 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
+//import ApolloClient from "apollo-boost";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import reportWebVitals from "./reportWebVitals";
 
 import { Listings } from "./sections";
 
+const client = new ApolloClient({
+    uri: "/api",
+    cache: new InMemoryCache(),
+});
+
 ReactDOM.render(
-    <React.StrictMode>
+    <ApolloProvider client={client}>
         <Listings title="HotelApp Title" />
-    </React.StrictMode>,
+    </ApolloProvider>,
     document.getElementById("root")
 );
 

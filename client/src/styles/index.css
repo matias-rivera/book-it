@@ -45,7 +45,8 @@
     box-shadow: 0 2px 4px rgba(29, 34, 108, 0.1);
 }
 .app-header__menu-section {
-    float: right;
+    margin-left: auto;
+    margin-right: 1rem;
 }
 .app-header-skeleton {
     display: flex;

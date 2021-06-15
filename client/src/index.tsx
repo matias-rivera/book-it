@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-import { Layout } from "antd";
+import { Layout, Affix } from "antd";
 import reportWebVitals from "./reportWebVitals";
 import "./styles/index.css";
 
 /* Components */
 import {
+    AppHeader,
     Home,
     Host,
     Listing,
@@ -36,6 +37,9 @@ const App = () => {
     return (
         <Router>
             <Layout id="app">
+                <Affix offsetTop={0} className="app__affix-header">
+                    <AppHeader viewer={viewer} setViewer={setViewer} />
+                </Affix>
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/host" component={Host} />

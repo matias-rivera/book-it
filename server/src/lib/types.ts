@@ -48,6 +48,7 @@ export interface Listing {
     bookingsIndex: BookingIndex;
     price: number;
     numOfGuests: number;
+    authorized?: boolean;
 }
 
 export interface User {

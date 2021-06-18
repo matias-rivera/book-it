@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 
 import { Avatar, Button, Menu } from "antd";
-import { HomeOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+    HomeOutlined,
+    UserOutlined,
+    LogoutOutlined,
+    AppstoreAddOutlined,
+} from "@ant-design/icons";
 
 import { Viewer } from "../../../../lib/types";
 import { LOG_OUT } from "../../../../lib/graphql/mutations";
@@ -13,7 +18,7 @@ import {
     displayErrorMessage,
 } from "../../../../lib/utils";
 
-const { Item, SubMenu } = Menu;
+const { Item, SubMenu, ItemGroup } = Menu;
 
 interface Props {
     viewer: Viewer;

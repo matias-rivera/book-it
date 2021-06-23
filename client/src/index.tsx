@@ -26,6 +26,7 @@ import {
     NotFound,
     User,
     Login,
+    Stripe,
 } from "./sections";
 
 import { AppHeaderSkeleton, ErrorBanner } from "./lib/components";
@@ -122,6 +123,7 @@ const App = () => {
                         path="/listings/:location?"
                         component={Listings}
                     />
+
                     <Route
                         exact
                         path="/login"
@@ -131,8 +133,25 @@ const App = () => {
                     />
                     <Route
                         exact
+                        path="/stripe"
+                        render={(props) => (
+                            <Stripe
+                                {...props}
+                                viewer={viewer}
+                                setViewer={setViewer}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact
                         path="/user/:id"
-                        render={(props) => <User {...props} viewer={viewer} />}
+                        render={(props) => (
+                            <User
+                                {...props}
+                                viewer={viewer}
+                                setViewer={setViewer}
+                            />
+                        )}
                     />
                     <Route component={NotFound} />
                 </Switch>

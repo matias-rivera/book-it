@@ -9,7 +9,8 @@
         "googleapis": "^76.0.0",
         "graphql": "^15.5.0",
         "lodash.merge": "^4.6.2",
-        "mongodb": "^3.6.9"
+        "mongodb": "^3.6.9",
+        "stripe": "^8.156.0"
     },
     "scripts": {
         "start": "nodemon src/index.ts",
@@ -26,6 +27,7 @@
         "@types/lodash.merge": "^4.6.6",
         "@types/mongodb": "^3.6.17",
         "@types/node": "^15.0.0",
+        "@types/stripe": "^8.0.417",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
         "dotenv": "^10.0.0",

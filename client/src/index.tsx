@@ -11,10 +11,15 @@ import {
     HttpLink,
     from,
 } from "@apollo/client";
+
 import { setContext } from "@apollo/client/link/context";
 import { Layout, Affix, Spin } from "antd";
 import reportWebVitals from "./reportWebVitals";
 import "./styles/index.css";
+
+/* Stripe */
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 /* Components */
 import {
@@ -44,11 +49,9 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     const token = sessionStorage.getItem("token");
     operation.setContext(({ headers = {} }) => ({
         headers: {
-            ...headers,
             "X-CSRF-TOKEN": token || "",
         },
     }));
-
     return forward(operation);
 });
 
@@ -72,11 +75,16 @@ const initialViewer: Viewer = {
     didRequest: false,
 };
 
+const stripePromise = loadStripe(
+    process.env.REACT_APP_S_PUBLISHABLE_KEY as string
+);
+
 const App = () => {
     const [viewer, setViewer] = useState<Viewer>(initialViewer);
     const [logIn, { error }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
         onCompleted: (data) => {
             if (data && data.logIn) {
+                console.log(data);
                 setViewer(data.logIn);
                 if (data.logIn.token) {
                     sessionStorage.setItem("token", data.logIn.token);
@@ -87,10 +95,11 @@ const App = () => {
         },
     });
 
-    const logInRef = useRef(logIn);
+    //const logInRef = useRef(logIn);
     useEffect(() => {
-        logInRef.current();
-    }, []);
+        //logInRef.current();
+        logIn();
+    }, [logIn]);
 
     if (!viewer.didRequest && !error) {
         return (
@@ -121,7 +130,17 @@ const App = () => {
                         path="/host"
                         render={(props) => <Host {...props} viewer={viewer} />}
                     />
-                    <Route exact path="/listing/:id" component={Listing} />
+
+                    <Route
+                        exact
+                        path="/listing/:id"
+                        render={(props) => (
+                            <Elements stripe={stripePromise}>
+                                <Listing {...props} viewer={viewer} />
+                            </Elements>
+                        )}
+                    />
+
                     <Route
                         exact
                         path="/listings/:location?"

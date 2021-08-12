@@ -52,6 +52,7 @@ export const listingResolvers: IResolvers = {
                 }
 
                 const viewer = await authorize(db, req);
+
                 if (viewer && viewer._id == listing.host) {
                     listing.authorized = true;
                 }
